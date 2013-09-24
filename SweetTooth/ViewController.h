@@ -12,5 +12,6 @@
 
 @property (weak, nonatomic) IBOutlet UILabel *lblScanning;
 - (IBAction)onValueChanged:(id)sender;
+- (IBAction)onClickWriteCharacteristic:(id)sender;
 
 @end

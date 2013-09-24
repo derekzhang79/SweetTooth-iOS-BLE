@@ -23,6 +23,7 @@
 		03089E2E17F20070009099B6 /* SweetToothTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 03089E2D17F20070009099B6 /* SweetToothTests.m */; };
 		03089E3A17F2016E009099B6 /* SweetToothManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 03089E3917F2016E009099B6 /* SweetToothManager.m */; };
 		03089E3C17F2036D009099B6 /* CoreBluetooth.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 03089E3B17F2036D009099B6 /* CoreBluetooth.framework */; };
+		03089E4217F2219F009099B6 /* CBUUID+StringExtraction.m in Sources */ = {isa = PBXBuildFile; fileRef = 03089E4117F2219F009099B6 /* CBUUID+StringExtraction.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -58,6 +59,8 @@
 		03089E3817F2016E009099B6 /* SweetToothManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SweetToothManager.h; sourceTree = "<group>"; };
 		03089E3917F2016E009099B6 /* SweetToothManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SweetToothManager.m; sourceTree = "<group>"; };
 		03089E3B17F2036D009099B6 /* CoreBluetooth.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreBluetooth.framework; path = System/Library/Frameworks/CoreBluetooth.framework; sourceTree = SDKROOT; };
+		03089E4017F2219F009099B6 /* CBUUID+StringExtraction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "CBUUID+StringExtraction.h"; sourceTree = "<group>"; };
+		03089E4117F2219F009099B6 /* CBUUID+StringExtraction.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "CBUUID+StringExtraction.m"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -165,6 +168,8 @@
 			children = (
 				03089E3817F2016E009099B6 /* SweetToothManager.h */,
 				03089E3917F2016E009099B6 /* SweetToothManager.m */,
+				03089E4017F2219F009099B6 /* CBUUID+StringExtraction.h */,
+				03089E4117F2219F009099B6 /* CBUUID+StringExtraction.m */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
@@ -267,6 +272,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				03089E1917F20070009099B6 /* ViewController.m in Sources */,
+				03089E4217F2219F009099B6 /* CBUUID+StringExtraction.m in Sources */,
 				03089E1317F20070009099B6 /* AppDelegate.m in Sources */,
 				03089E0F17F20070009099B6 /* main.m in Sources */,
 				03089E3A17F2016E009099B6 /* SweetToothManager.m in Sources */,

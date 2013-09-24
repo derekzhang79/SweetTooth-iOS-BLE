@@ -14,11 +14,15 @@
 
 @property (nonatomic, strong) CBCentralManager* centralManager;
 
-@property (nonatomic, strong) NSMutableArray *peripherals;
-
 @property (readwrite, copy) DiscoverPeripheral discoverPeripheral;
 @property (readwrite, copy) PeripheralConnected peripheralConnected;
+@property (readwrite, copy) PeripheralFailedToConnect peripheralFailedToConnect;
+@property (readwrite, copy) PeripheralDisconnected peripheralDisconnected;
+
 @property (readwrite, copy) PeripheralDiscoverServices peripheralDiscoverServices;
+@property (readwrite, copy) PeripheralDiscoverCharacteristics peripheralDiscoverCharacteristics;
+@property (readwrite, copy) PeripheralUpdateCharacteristc peripheralUpdateCharacteristc;
+@property (readwrite, copy) PeripheralWriteCharacteristc peripheralWriteCharacteristc;
 
 @end
 
@@ -50,7 +54,6 @@ static SweetToothManager *sharedInstance = nil;
     self = [super init];
     if (self) {
         self.centralManager = [[CBCentralManager alloc] initWithDelegate:self queue:queue options:options];
-        self.peripherals = [NSMutableArray array];
     }
     return self;
 }
@@ -72,6 +75,8 @@ static SweetToothManager *sharedInstance = nil;
     [self.centralManager stopScan];
 }
 
+#pragma mark - Blocks
+
 - (void)setDiscoverPeripheralBlock:(DiscoverPeripheral)theDiscoverPeripheral {
     self.discoverPeripheral = theDiscoverPeripheral;
 }
@@ -80,12 +85,40 @@ static SweetToothManager *sharedInstance = nil;
     self.peripheralConnected = peripheralConnected;
 }
 
+- (void)setPeripheralFailedToConnectBlock:(PeripheralFailedToConnect)peripheralFailedToConnect {
+    self.peripheralFailedToConnect = peripheralFailedToConnect;
+}
+
+- (void)setPeripheralDisconnectedBlock:(PeripheralDisconnected)peripheralDisconnected {
+    self.peripheralDisconnected = peripheralDisconnected;
+}
+
 - (void)setPeripheralDiscoverServicesBlock:(PeripheralDiscoverServices)thePeripheralDiscoverServices {
     self.peripheralDiscoverServices = thePeripheralDiscoverServices;
 }
 
+- (void)setPeripheralDiscoverCharacteristicsBlock:(PeripheralDiscoverCharacteristics)peripheralDiscoverCharacteristics {
+    self.peripheralDiscoverCharacteristics = peripheralDiscoverCharacteristics;
+}
+
+- (void)setPeripheralUpdateCharacteristcBlock:(PeripheralUpdateCharacteristc)peripheralUpdateCharacteristc {
+    self.peripheralUpdateCharacteristc = peripheralUpdateCharacteristc;
+}
+
+- (void)setPeripheralWriteCharacteristcBlock:(PeripheralWriteCharacteristc)peripheralWriteCharacteristc {
+    self.peripheralWriteCharacteristc = peripheralWriteCharacteristc;
+}
+
+#pragma mark - Helper
+
 - (void)connectPeripheral:(CBPeripheral*)peripheral options:(NSDictionary *)options {
     [self.centralManager connectPeripheral:peripheral options:options];
+}
+
+- (void)cancelPeripheralConnection:(CBPeripheral*)peripheral {
+    if (peripheral != nil) {
+        [self.centralManager cancelPeripheralConnection:peripheral];
+    }
 }
 
 #pragma mark - CBCentralManagerDelegate
@@ -118,11 +151,7 @@ static SweetToothManager *sharedInstance = nil;
 }
 
 - (void)centralManager:(CBCentralManager *)central didDiscoverPeripheral:(CBPeripheral *)peripheral advertisementData:(NSDictionary *)advertisementData RSSI:(NSNumber *)RSSI {
-    
-    if (![self.peripherals containsObject:peripheral]) {
-        [self.peripherals addObject:peripheral];
-        [peripheral setDelegate:self];
-    }
+    [peripheral setDelegate:self];
     
     if (self.discoverPeripheral != nil) {
         self.discoverPeripheral(peripheral, advertisementData, RSSI);
@@ -130,8 +159,21 @@ static SweetToothManager *sharedInstance = nil;
 }
 
 - (void)centralManager:(CBCentralManager *)central didConnectPeripheral:(CBPeripheral *)peripheral {
+    [peripheral setDelegate:self];
     if (self.peripheralConnected != nil) {
         self.peripheralConnected(peripheral);
+    }
+}
+
+- (void)centralManager:(CBCentralManager *)central didFailToConnectPeripheral:(CBPeripheral *)peripheral error:(NSError *)error {
+    if (self.peripheralFailedToConnect != nil) {
+        self.peripheralFailedToConnect(peripheral, error);
+    }
+}
+
+- (void)centralManager:(CBCentralManager *)central didDisconnectPeripheral:(CBPeripheral *)peripheral error:(NSError *)error {
+    if (self.peripheralDisconnected != nil) {
+        self.peripheralDisconnected(peripheral, error);
     }
 }
 
@@ -140,6 +182,24 @@ static SweetToothManager *sharedInstance = nil;
 - (void)peripheral:(CBPeripheral *)peripheral didDiscoverServices:(NSError *)error {
     if (self.peripheralDiscoverServices != nil) {
         self.peripheralDiscoverServices(peripheral, error);
+    }
+}
+
+- (void)peripheral:(CBPeripheral *)peripheral didDiscoverCharacteristicsForService:(CBService *)service error:(NSError *)error {
+    if (self.peripheralDiscoverCharacteristics != nil) {
+        self.peripheralDiscoverCharacteristics(peripheral, service, error);
+    }
+}
+
+- (void)peripheral:(CBPeripheral *)peripheral didUpdateValueForCharacteristic:(CBCharacteristic *)characteristic error:(NSError *)error {
+    if (self.peripheralUpdateCharacteristc != nil) {
+        self.peripheralUpdateCharacteristc(peripheral, characteristic, error);
+    }
+}
+
+- (void)peripheral:(CBPeripheral *)peripheral didWriteValueForCharacteristic:(CBCharacteristic *)characteristic error:(NSError *)error {
+    if (self.peripheralWriteCharacteristc != nil) {
+        self.peripheralWriteCharacteristc(peripheral, characteristic, error);
     }
 }
 

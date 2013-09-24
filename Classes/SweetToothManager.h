@@ -12,7 +12,13 @@
 
 typedef void (^DiscoverPeripheral)(CBPeripheral* peripheral, NSDictionary* advertisementData, NSNumber* RSSI);
 typedef void (^PeripheralConnected)(CBPeripheral* peripheral);
+typedef void (^PeripheralFailedToConnect)(CBPeripheral* peripheral, NSError* error);
+typedef void (^PeripheralDisconnected)(CBPeripheral* peripheral, NSError* error);
+
 typedef void (^PeripheralDiscoverServices)(CBPeripheral* peripheral, NSError* error);
+typedef void (^PeripheralDiscoverCharacteristics)(CBPeripheral* peripheral, CBService* service, NSError* error);
+typedef void (^PeripheralUpdateCharacteristc)(CBPeripheral* peripheral, CBCharacteristic* characteristic, NSError*error);
+typedef void (^PeripheralWriteCharacteristc)(CBPeripheral* peripheral, CBCharacteristic* characteristic, NSError*error);
 
 @interface SweetToothManager : NSObject
 
@@ -26,9 +32,16 @@ typedef void (^PeripheralDiscoverServices)(CBPeripheral* peripheral, NSError* er
 - (void)stop;
 
 - (void)connectPeripheral:(CBPeripheral*)peripheral options:(NSDictionary *)options;
+- (void)cancelPeripheralConnection:(CBPeripheral*)peripheral;
 
 - (void)setDiscoverPeripheralBlock:(DiscoverPeripheral)discoverPeripheral;
 - (void)setPeripheralConnectedBlock:(PeripheralConnected)peripheralConnected;
+- (void)setPeripheralFailedToConnectBlock:(PeripheralFailedToConnect)peripheralFailedToConnect;
+- (void)setPeripheralDisconnectedBlock:(PeripheralDisconnected)peripheralDisconnected;
+
 - (void)setPeripheralDiscoverServicesBlock:(PeripheralDiscoverServices)peripheralDiscoverServices;
+- (void)setPeripheralDiscoverCharacteristicsBlock:(PeripheralDiscoverCharacteristics)peripheralDiscoverCharacteristics;
+- (void)setPeripheralUpdateCharacteristcBlock:(PeripheralUpdateCharacteristc)peripheralUpdateCharacteristc;
+- (void)setPeripheralWriteCharacteristcBlock:(PeripheralWriteCharacteristc)peripheralWriteCharacteristc;
 
 @end
