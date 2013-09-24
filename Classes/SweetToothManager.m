@@ -10,11 +10,15 @@
 
 #import <CoreBluetooth/CoreBluetooth.h>
 
-@interface SweetToothManager()<CBCentralManagerDelegate>
+@interface SweetToothManager()<CBCentralManagerDelegate, CBPeripheralDelegate>
 
 @property (nonatomic, strong) CBCentralManager* centralManager;
 
-@property(readwrite, copy) DiscoverPeripheral discoverPeripheral;
+@property (nonatomic, strong) NSMutableArray *peripherals;
+
+@property (readwrite, copy) DiscoverPeripheral discoverPeripheral;
+@property (readwrite, copy) PeripheralConnected peripheralConnected;
+@property (readwrite, copy) PeripheralDiscoverServices peripheralDiscoverServices;
 
 @end
 
@@ -36,7 +40,7 @@ static SweetToothManager *sharedInstance = nil;
 + (SweetToothManager *)sharedClient {
     
     if (sharedInstance == nil) {
-        sharedInstance = [[super allocWithZone:NULL] init];
+        sharedInstance = [[super allocWithZone:NULL] init:nil options:nil];
     }
     
     return sharedInstance;
@@ -46,6 +50,7 @@ static SweetToothManager *sharedInstance = nil;
     self = [super init];
     if (self) {
         self.centralManager = [[CBCentralManager alloc] initWithDelegate:self queue:queue options:options];
+        self.peripherals = [NSMutableArray array];
     }
     return self;
 }
@@ -67,8 +72,20 @@ static SweetToothManager *sharedInstance = nil;
     [self.centralManager stopScan];
 }
 
-- (void)setDiscoverPeripheralBlock:(DiscoverPeripheral)discoverPeripheral {
-    self.discoverPeripheral = discoverPeripheral;
+- (void)setDiscoverPeripheralBlock:(DiscoverPeripheral)theDiscoverPeripheral {
+    self.discoverPeripheral = theDiscoverPeripheral;
+}
+
+- (void)setPeripheralConnectedBlock:(PeripheralConnected)peripheralConnected {
+    self.peripheralConnected = peripheralConnected;
+}
+
+- (void)setPeripheralDiscoverServicesBlock:(PeripheralDiscoverServices)thePeripheralDiscoverServices {
+    self.peripheralDiscoverServices = thePeripheralDiscoverServices;
+}
+
+- (void)connectPeripheral:(CBPeripheral*)peripheral options:(NSDictionary *)options {
+    [self.centralManager connectPeripheral:peripheral options:options];
 }
 
 #pragma mark - CBCentralManagerDelegate
@@ -101,10 +118,28 @@ static SweetToothManager *sharedInstance = nil;
 }
 
 - (void)centralManager:(CBCentralManager *)central didDiscoverPeripheral:(CBPeripheral *)peripheral advertisementData:(NSDictionary *)advertisementData RSSI:(NSNumber *)RSSI {
-//    NSLog(@"Did we discover?");
-//    NSLog(@"Discovered %@", peripheral.name);
+    
+    if (![self.peripherals containsObject:peripheral]) {
+        [self.peripherals addObject:peripheral];
+        [peripheral setDelegate:self];
+    }
+    
     if (self.discoverPeripheral != nil) {
         self.discoverPeripheral(peripheral, advertisementData, RSSI);
+    }
+}
+
+- (void)centralManager:(CBCentralManager *)central didConnectPeripheral:(CBPeripheral *)peripheral {
+    if (self.peripheralConnected != nil) {
+        self.peripheralConnected(peripheral);
+    }
+}
+
+#pragma mark - CBPeripheralDelegate
+
+- (void)peripheral:(CBPeripheral *)peripheral didDiscoverServices:(NSError *)error {
+    if (self.peripheralDiscoverServices != nil) {
+        self.peripheralDiscoverServices(peripheral, error);
     }
 }
 

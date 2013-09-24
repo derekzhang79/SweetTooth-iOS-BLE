@@ -29,7 +29,19 @@
     // Set discover peripheral block
     [[SweetToothManager sharedClient] setDiscoverPeripheralBlock:^void(CBPeripheral *peripheral, NSDictionary *advertisementData, NSNumber *RSSI) {
         
-        NSLog(@"Name - %@", peripheral.name);
+        NSLog(@"Discovered - %@", peripheral.name);
+        [[SweetToothManager sharedClient] connectPeripheral:peripheral options:@{}];
+    }];
+    
+    // Set peripheral connected block
+    [[SweetToothManager sharedClient] setPeripheralConnectedBlock:^(CBPeripheral *peripheral) {
+        NSLog(@"Connected - %@", peripheral.name);
+        [peripheral discoverServices:nil];
+    }];
+    
+    // Set peripheral discover services block
+    [[SweetToothManager sharedClient] setPeripheralDiscoverServicesBlock:^(CBPeripheral *peripheral, NSError *error) {
+        NSLog(@"Services discovered - %@", peripheral.services);
     }];
 }
 
