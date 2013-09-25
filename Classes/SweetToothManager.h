@@ -20,6 +20,9 @@ typedef void (^PeripheralDiscoverCharacteristics)(CBPeripheral* peripheral, CBSe
 typedef void (^PeripheralUpdateCharacteristc)(CBPeripheral* peripheral, CBCharacteristic* characteristic, NSError*error);
 typedef void (^PeripheralWriteCharacteristc)(CBPeripheral* peripheral, CBCharacteristic* characteristic, NSError*error);
 
+typedef void (^RetreievePeripherals)(NSArray* peripherals);
+typedef void (^RetreieveConnectedPeripherals)(NSArray* peripherals);
+
 @interface SweetToothManager : NSObject
 
 @property (nonatomic, assign) BOOL isScanning;
@@ -38,6 +41,9 @@ typedef void (^PeripheralWriteCharacteristc)(CBPeripheral* peripheral, CBCharact
 - (void)setPeripheralConnectedBlock:(PeripheralConnected)peripheralConnected;
 - (void)setPeripheralFailedToConnectBlock:(PeripheralFailedToConnect)peripheralFailedToConnect;
 - (void)setPeripheralDisconnectedBlock:(PeripheralDisconnected)peripheralDisconnected;
+
+- (void)setRetreievePeripheralsBlock:(RetreievePeripherals)retreievePeripherals;
+- (void)setRetreieveConnectedPeripheralsBlock:(RetreieveConnectedPeripherals)retreieveConnectedPeripherals;
 
 - (void)setPeripheralDiscoverServicesBlock:(PeripheralDiscoverServices)peripheralDiscoverServices;
 - (void)setPeripheralDiscoverCharacteristicsBlock:(PeripheralDiscoverCharacteristics)peripheralDiscoverCharacteristics;

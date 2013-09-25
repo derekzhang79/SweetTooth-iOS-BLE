@@ -24,6 +24,9 @@
 @property (readwrite, copy) PeripheralUpdateCharacteristc peripheralUpdateCharacteristc;
 @property (readwrite, copy) PeripheralWriteCharacteristc peripheralWriteCharacteristc;
 
+@property (readwrite, copy) RetreievePeripherals retreievePeripherals;
+@property (readwrite, copy) RetreieveConnectedPeripherals retreieveConnectedPeripherals;
+
 @end
 
 @implementation SweetToothManager
@@ -109,6 +112,14 @@ static SweetToothManager *sharedInstance = nil;
     self.peripheralWriteCharacteristc = peripheralWriteCharacteristc;
 }
 
+- (void)setRetreievePeripheralsBlock:(RetreievePeripherals)retreievePeripherals {
+    self.retreievePeripherals = retreievePeripherals;
+}
+
+- (void)setRetreieveConnectedPeripheralsBlock:(RetreieveConnectedPeripherals)retreieveConnectedPeripherals {
+    self.retreieveConnectedPeripherals = retreieveConnectedPeripherals;
+}
+
 #pragma mark - Helper
 
 - (void)connectPeripheral:(CBPeripheral*)peripheral options:(NSDictionary *)options {
@@ -174,6 +185,18 @@ static SweetToothManager *sharedInstance = nil;
 - (void)centralManager:(CBCentralManager *)central didDisconnectPeripheral:(CBPeripheral *)peripheral error:(NSError *)error {
     if (self.peripheralDisconnected != nil) {
         self.peripheralDisconnected(peripheral, error);
+    }
+}
+
+- (void)centralManager:(CBCentralManager *)central didRetrievePeripherals:(NSArray *)peripherals {
+    if (self.retreievePeripherals != nil) {
+        self.retreievePeripherals(peripherals);
+    }
+}
+
+- (void)centralManager:(CBCentralManager *)central didRetrieveConnectedPeripherals:(NSArray *)peripherals {
+    if (self.retreieveConnectedPeripherals != nil) {
+        self.retreieveConnectedPeripherals(peripherals);
     }
 }
 
