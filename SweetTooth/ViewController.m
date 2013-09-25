@@ -35,10 +35,10 @@
     [SweetToothManager initSharedManager:queue options:nil];
     
     // Runs through a majority of the callbacks
-    [self test];
+//    [self test];
     
     // Runs a helper method to read the characteristic(s) of peripheral for a given service
-    //[self testSweetReadHelper];
+    [self testSweetReadHelper];
     
 }
 
@@ -113,7 +113,7 @@
     [[SweetToothManager sharedManager] addDiscoverPeripheralBlock:^void(CBPeripheral *peripheral, NSDictionary *advertisementData, NSNumber *RSSI) {
         
         /*
-         * Retain this peripheral for future use - peripheral NEEDS to be retained to be connected to
+         * Retain this peripheral for future use - peripheral NEEDS to be retained to be connected to otherw`ise it will be deallocated
          *
          * Peripheral also comes back with delegate preset to SweetToothManger
          * IF you change this (which you can), the block methods below won't get called
@@ -123,7 +123,9 @@
             
             // Reads characteristics from a service - takes service CCUUID, takes and NSArray of characteristic CCUIDs (nil will get all characteristics)
             // This method connects peripheral, discovers service, discovers characterists, request update on characteristic values, and disconnects
-            [_somePeripheral readCharacteristics:[CBUUID UUIDWithString:@"Some-Service-UUUID"] characteristicUUIDs:@[[CBUUID UUIDWithString:@"ed0d5a2e-00cd-4a3c-bd58-31e9e22a9c43"]] block:^(CBPeripheral *peripheral, NSArray *characteristics, NSError *error) {
+            [_somePeripheral readCharacteristics:nil characteristicUUIDs:@[[CBUUID UUIDWithString:@"ed0d5a2e-00cd-4a3c-bd58-31e9e22a9c43"]] block:^(CBPeripheral *peripheral, NSArray *characteristics, NSError *error) {
+                
+                NSLog(@"Error - %@", error);
                 
                 [characteristics enumerateObjectsUsingBlock:^(CBCharacteristic* characteristic, NSUInteger idx, BOOL *stop) {
                     // Here is where you would map value to some variable or data object based on the characteristic's UUID

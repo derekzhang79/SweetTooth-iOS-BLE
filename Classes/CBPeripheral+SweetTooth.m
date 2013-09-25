@@ -98,6 +98,11 @@ static char PERIPHERAL_DISCONNECTED_IDENTIFIER;
 
 - (void)readCharacteristics:(CBUUID*)service characteristicUUIDs:(NSArray *)characteristicUUIDs block:(SweetToothPeripheralUpdateCharacteristc)block {
     
+    if (service == nil) {
+        block(self, nil, [NSError errorWithDomain:@"Service CBUUID was not provided" code:123456 userInfo:@{}]);
+        return;
+    }
+    
     NSMutableArray *characteristics = [NSMutableArray array];
     [self setPeripheralCharacteristics:characteristics];
     
