@@ -37,6 +37,8 @@ We created some helpers for you to make simple tasks... simple
 
 ````objc
 
+    #import "CBPeripheral+SweetTooth.h"
+
     // This is a peripheral that we retain and set in our DiscoverPeripheralBlock
     @property (nonatomic, strong) CBPeripheral *somePeripheral;
 
