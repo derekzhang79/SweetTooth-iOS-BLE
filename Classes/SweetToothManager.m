@@ -14,18 +14,23 @@
 
 @property (nonatomic, strong) CBCentralManager* centralManager;
 
-@property (readwrite, copy) DiscoverPeripheral discoverPeripheral;
-@property (readwrite, copy) PeripheralConnected peripheralConnected;
-@property (readwrite, copy) PeripheralFailedToConnect peripheralFailedToConnect;
-@property (readwrite, copy) PeripheralDisconnected peripheralDisconnected;
+/*
+ * BLOCKS
+ */
+@property (nonatomic, strong) NSMutableArray* discoverPeripheralBlocks;
+@property (nonatomic, strong) NSMutableArray* peripheralConnectedBlocks;
+@property (nonatomic, strong) NSMutableArray* peripheralFailedToConnectBlocks;
+@property (nonatomic, strong) NSMutableArray* peripheralDisconnectedBlocks;
 
-@property (readwrite, copy) PeripheralDiscoverServices peripheralDiscoverServices;
-@property (readwrite, copy) PeripheralDiscoverCharacteristics peripheralDiscoverCharacteristics;
-@property (readwrite, copy) PeripheralUpdateCharacteristc peripheralUpdateCharacteristc;
-@property (readwrite, copy) PeripheralWriteCharacteristc peripheralWriteCharacteristc;
+@property (nonatomic, strong) NSMutableArray* peripheralDiscoverServicesBlocks;
+@property (nonatomic, strong) NSMutableArray* peripheralDiscoverCharacteristicsBlocks;
+@property (nonatomic, strong) NSMutableArray* peripheralUpdateCharacteristcBlocks;
+@property (nonatomic, strong) NSMutableArray* peripheralWriteCharacteristcBlocks;
 
-@property (readwrite, copy) RetreievePeripherals retreievePeripherals;
-@property (readwrite, copy) RetreieveConnectedPeripherals retreieveConnectedPeripherals;
+@property (nonatomic, strong) NSMutableArray* retreievePeripheralsBlocks;
+@property (nonatomic, strong) NSMutableArray* retreieveConnectedPeripheralsBlocks;
+
+
 
 @end
 
@@ -57,6 +62,19 @@ static SweetToothManager *sharedInstance = nil;
     self = [super init];
     if (self) {
         self.centralManager = [[CBCentralManager alloc] initWithDelegate:self queue:queue options:options];
+        
+        self.discoverPeripheralBlocks = [NSMutableArray array];
+        self.peripheralConnectedBlocks = [NSMutableArray array];
+        self.peripheralFailedToConnectBlocks = [NSMutableArray array];
+        self.peripheralDisconnectedBlocks =  [NSMutableArray array];
+        
+        self.peripheralDiscoverServicesBlocks = [NSMutableArray array];
+        self.peripheralDiscoverCharacteristicsBlocks = [NSMutableArray array];
+        self.peripheralUpdateCharacteristcBlocks = [NSMutableArray array];
+        self.peripheralWriteCharacteristcBlocks = [NSMutableArray array];
+        
+        self.retreievePeripheralsBlocks = [NSMutableArray array];
+        self.retreieveConnectedPeripheralsBlocks = [NSMutableArray array];
     }
     return self;
 }
@@ -78,46 +96,101 @@ static SweetToothManager *sharedInstance = nil;
     [self.centralManager stopScan];
 }
 
-#pragma mark - Blocks
+#pragma mark - Add Blocks
 
-- (void)setDiscoverPeripheralBlock:(DiscoverPeripheral)theDiscoverPeripheral {
-    self.discoverPeripheral = theDiscoverPeripheral;
+- (void)addDiscoverPeripheralBlock:(DiscoverPeripheral)theDiscoverPeripheral {
+    [self.discoverPeripheralBlocks addObject:theDiscoverPeripheral];
 }
 
-- (void)setPeripheralConnectedBlock:(PeripheralConnected)peripheralConnected {
-    self.peripheralConnected = peripheralConnected;
+- (void)addPeripheralConnectedBlock:(PeripheralConnected)peripheralConnected {
+    [self.peripheralConnectedBlocks addObject:peripheralConnected];
 }
 
-- (void)setPeripheralFailedToConnectBlock:(PeripheralFailedToConnect)peripheralFailedToConnect {
-    self.peripheralFailedToConnect = peripheralFailedToConnect;
+- (void)addPeripheralFailedToConnectBlock:(PeripheralFailedToConnect)peripheralFailedToConnect {
+    [self.peripheralFailedToConnectBlocks addObject:peripheralFailedToConnect];
 }
 
-- (void)setPeripheralDisconnectedBlock:(PeripheralDisconnected)peripheralDisconnected {
-    self.peripheralDisconnected = peripheralDisconnected;
+- (void)addPeripheralDisconnectedBlock:(PeripheralDisconnected)peripheralDisconnected {
+    [self.peripheralDisconnectedBlocks addObject:peripheralDisconnected];
 }
 
-- (void)setPeripheralDiscoverServicesBlock:(PeripheralDiscoverServices)thePeripheralDiscoverServices {
-    self.peripheralDiscoverServices = thePeripheralDiscoverServices;
+- (void)addPeripheralDiscoverServicesBlock:(PeripheralDiscoverServices)thePeripheralDiscoverServices {
+    [self.peripheralDiscoverServicesBlocks addObject:thePeripheralDiscoverServices];
 }
 
-- (void)setPeripheralDiscoverCharacteristicsBlock:(PeripheralDiscoverCharacteristics)peripheralDiscoverCharacteristics {
-    self.peripheralDiscoverCharacteristics = peripheralDiscoverCharacteristics;
+- (void)addPeripheralDiscoverCharacteristicsBlock:(PeripheralDiscoverCharacteristics)peripheralDiscoverCharacteristics {
+    [self.peripheralDiscoverCharacteristicsBlocks addObject:peripheralDiscoverCharacteristics];
 }
 
-- (void)setPeripheralUpdateCharacteristcBlock:(PeripheralUpdateCharacteristc)peripheralUpdateCharacteristc {
-    self.peripheralUpdateCharacteristc = peripheralUpdateCharacteristc;
+- (void)addPeripheralUpdateCharacteristcBlock:(PeripheralUpdateCharacteristc)peripheralUpdateCharacteristc {
+    [self.peripheralUpdateCharacteristcBlocks addObject:peripheralUpdateCharacteristc];
 }
 
-- (void)setPeripheralWriteCharacteristcBlock:(PeripheralWriteCharacteristc)peripheralWriteCharacteristc {
-    self.peripheralWriteCharacteristc = peripheralWriteCharacteristc;
+- (void)addPeripheralWriteCharacteristcBlock:(PeripheralWriteCharacteristc)peripheralWriteCharacteristc {
+    [self.peripheralWriteCharacteristcBlocks addObject:peripheralWriteCharacteristc];
 }
 
-- (void)setRetreievePeripheralsBlock:(RetreievePeripherals)retreievePeripherals {
-    self.retreievePeripherals = retreievePeripherals;
+- (void)addRetreievePeripheralsBlock:(RetreievePeripherals)retreievePeripherals {
+    [self.retreievePeripheralsBlocks addObject:retreievePeripherals];
 }
 
-- (void)setRetreieveConnectedPeripheralsBlock:(RetreieveConnectedPeripherals)retreieveConnectedPeripherals {
-    self.retreieveConnectedPeripherals = retreieveConnectedPeripherals;
+- (void)addRetreieveConnectedPeripheralsBlock:(RetreieveConnectedPeripherals)retreieveConnectedPeripherals {
+    [self.retreieveConnectedPeripheralsBlocks addObject:retreieveConnectedPeripherals];
+}
+
+#pragma mark - Remove Blocks
+
+- (void)removeAllBlocks {
+    [self.discoverPeripheralBlocks removeAllObjects];
+    [self.peripheralConnectedBlocks removeAllObjects];
+    [self.peripheralFailedToConnectBlocks removeAllObjects];
+    [self.peripheralDisconnectedBlocks removeAllObjects];
+    [self.peripheralDiscoverServicesBlocks removeAllObjects];
+    [self.peripheralDiscoverCharacteristicsBlocks removeAllObjects];
+    [self.peripheralUpdateCharacteristcBlocks removeAllObjects];
+    [self.peripheralWriteCharacteristcBlocks removeAllObjects];
+    [self.retreievePeripheralsBlocks removeAllObjects];
+    [self.retreieveConnectedPeripheralsBlocks removeAllObjects];
+}
+
+- (void)removeDiscoverPeripheralBlock:(DiscoverPeripheral)theDiscoverPeripheral {
+    [self.discoverPeripheralBlocks removeObject:theDiscoverPeripheral];
+}
+
+- (void)removePeripheralConnectedBlock:(PeripheralConnected)peripheralConnected {
+    [self.peripheralConnectedBlocks removeObject:peripheralConnected];
+}
+
+- (void)removePeripheralFailedToConnectBlock:(PeripheralFailedToConnect)peripheralFailedToConnect {
+    [self.peripheralFailedToConnectBlocks removeObject:peripheralFailedToConnect];
+}
+
+- (void)removePeripheralDisconnectedBlock:(PeripheralDisconnected)peripheralDisconnected {
+    [self.peripheralDisconnectedBlocks removeObject:peripheralDisconnected];
+}
+
+- (void)removePeripheralDiscoverServicesBlock:(PeripheralDiscoverServices)thePeripheralDiscoverServices {
+    [self.peripheralDiscoverServicesBlocks removeObject:thePeripheralDiscoverServices];
+}
+
+- (void)removePeripheralDiscoverCharacteristicsBlock:(PeripheralDiscoverCharacteristics)peripheralDiscoverCharacteristics {
+    [self.peripheralDiscoverCharacteristicsBlocks removeObject:peripheralDiscoverCharacteristics];
+}
+
+- (void)removePeripheralUpdateCharacteristcBlock:(PeripheralUpdateCharacteristc)peripheralUpdateCharacteristc {
+    [self.peripheralUpdateCharacteristcBlocks removeObject:peripheralUpdateCharacteristc];
+}
+
+- (void)removePeripheralWriteCharacteristcBlock:(PeripheralWriteCharacteristc)peripheralWriteCharacteristc {
+    [self.peripheralWriteCharacteristcBlocks removeObject:peripheralWriteCharacteristc];
+}
+
+- (void)removeRetreievePeripheralsBlock:(RetreievePeripherals)retreievePeripherals {
+    [self.retreievePeripheralsBlocks removeObject:retreievePeripherals];
+}
+
+- (void)removeRetreieveConnectedPeripheralsBlock:(RetreieveConnectedPeripherals)retreieveConnectedPeripherals {
+    [self.retreieveConnectedPeripheralsBlocks removeObject:retreieveConnectedPeripherals];
 }
 
 #pragma mark - Helper
@@ -163,67 +236,66 @@ static SweetToothManager *sharedInstance = nil;
 
 - (void)centralManager:(CBCentralManager *)central didDiscoverPeripheral:(CBPeripheral *)peripheral advertisementData:(NSDictionary *)advertisementData RSSI:(NSNumber *)RSSI {
     [peripheral setDelegate:self];
-    
-    if (self.discoverPeripheral != nil) {
-        self.discoverPeripheral(peripheral, advertisementData, RSSI);
-    }
+    [self.discoverPeripheralBlocks enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+        ((DiscoverPeripheral)obj)(peripheral, advertisementData, RSSI);
+    }];
 }
 
 - (void)centralManager:(CBCentralManager *)central didConnectPeripheral:(CBPeripheral *)peripheral {
     [peripheral setDelegate:self];
-    if (self.peripheralConnected != nil) {
-        self.peripheralConnected(peripheral);
-    }
+    [self.peripheralConnectedBlocks enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+        ((PeripheralConnected)obj)(peripheral);
+    }];
 }
 
 - (void)centralManager:(CBCentralManager *)central didFailToConnectPeripheral:(CBPeripheral *)peripheral error:(NSError *)error {
-    if (self.peripheralFailedToConnect != nil) {
-        self.peripheralFailedToConnect(peripheral, error);
-    }
+    [self.peripheralFailedToConnectBlocks enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+        ((PeripheralFailedToConnect)obj)(peripheral, error);
+    }];
 }
 
 - (void)centralManager:(CBCentralManager *)central didDisconnectPeripheral:(CBPeripheral *)peripheral error:(NSError *)error {
-    if (self.peripheralDisconnected != nil) {
-        self.peripheralDisconnected(peripheral, error);
-    }
+    [self.peripheralDisconnectedBlocks enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+        ((PeripheralDisconnected)obj)(peripheral, error);
+    }];
 }
 
 - (void)centralManager:(CBCentralManager *)central didRetrievePeripherals:(NSArray *)peripherals {
-    if (self.retreievePeripherals != nil) {
-        self.retreievePeripherals(peripherals);
-    }
+    [self.retreievePeripheralsBlocks enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+        ((RetreievePeripherals)obj)(peripherals);
+    }];
 }
 
 - (void)centralManager:(CBCentralManager *)central didRetrieveConnectedPeripherals:(NSArray *)peripherals {
-    if (self.retreieveConnectedPeripherals != nil) {
-        self.retreieveConnectedPeripherals(peripherals);
-    }
+    [self.retreieveConnectedPeripheralsBlocks enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+        ((RetreieveConnectedPeripherals)obj)(peripherals);
+    }];
 }
 
 #pragma mark - CBPeripheralDelegate
 
 - (void)peripheral:(CBPeripheral *)peripheral didDiscoverServices:(NSError *)error {
-    if (self.peripheralDiscoverServices != nil) {
-        self.peripheralDiscoverServices(peripheral, error);
-    }
+    [self.peripheralDiscoverServicesBlocks enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+        ((PeripheralDiscoverServices)obj)(peripheral, error);
+    }];
 }
 
 - (void)peripheral:(CBPeripheral *)peripheral didDiscoverCharacteristicsForService:(CBService *)service error:(NSError *)error {
-    if (self.peripheralDiscoverCharacteristics != nil) {
-        self.peripheralDiscoverCharacteristics(peripheral, service, error);
-    }
+    [self.peripheralDiscoverCharacteristicsBlocks enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+        ((PeripheralDiscoverCharacteristics)obj)(peripheral, service, error);
+    }];
 }
 
 - (void)peripheral:(CBPeripheral *)peripheral didUpdateValueForCharacteristic:(CBCharacteristic *)characteristic error:(NSError *)error {
-    if (self.peripheralUpdateCharacteristc != nil) {
-        self.peripheralUpdateCharacteristc(peripheral, characteristic, error);
-    }
+    [self.peripheralUpdateCharacteristcBlocks enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+        ((PeripheralUpdateCharacteristc)obj)(peripheral, characteristic, error);
+    }];
 }
 
 - (void)peripheral:(CBPeripheral *)peripheral didWriteValueForCharacteristic:(CBCharacteristic *)characteristic error:(NSError *)error {
-    if (self.peripheralWriteCharacteristc != nil) {
-        self.peripheralWriteCharacteristc(peripheral, characteristic, error);
-    }
+    [self.peripheralWriteCharacteristcBlocks enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+        ((PeripheralWriteCharacteristc)obj)(peripheral, characteristic, error);
+    }];
 }
 
 @end

@@ -37,17 +37,32 @@ typedef void (^RetreieveConnectedPeripherals)(NSArray* peripherals);
 - (void)connectPeripheral:(CBPeripheral*)peripheral options:(NSDictionary *)options;
 - (void)cancelPeripheralConnection:(CBPeripheral*)peripheral;
 
-- (void)setDiscoverPeripheralBlock:(DiscoverPeripheral)discoverPeripheral;
-- (void)setPeripheralConnectedBlock:(PeripheralConnected)peripheralConnected;
-- (void)setPeripheralFailedToConnectBlock:(PeripheralFailedToConnect)peripheralFailedToConnect;
-- (void)setPeripheralDisconnectedBlock:(PeripheralDisconnected)peripheralDisconnected;
+- (void)addDiscoverPeripheralBlock:(DiscoverPeripheral)discoverPeripheral;
+- (void)addPeripheralConnectedBlock:(PeripheralConnected)peripheralConnected;
+- (void)addPeripheralFailedToConnectBlock:(PeripheralFailedToConnect)peripheralFailedToConnect;
+- (void)addPeripheralDisconnectedBlock:(PeripheralDisconnected)peripheralDisconnected;
 
-- (void)setRetreievePeripheralsBlock:(RetreievePeripherals)retreievePeripherals;
-- (void)setRetreieveConnectedPeripheralsBlock:(RetreieveConnectedPeripherals)retreieveConnectedPeripherals;
+- (void)addRetreievePeripheralsBlock:(RetreievePeripherals)retreievePeripherals;
+- (void)addRetreieveConnectedPeripheralsBlock:(RetreieveConnectedPeripherals)retreieveConnectedPeripherals;
 
-- (void)setPeripheralDiscoverServicesBlock:(PeripheralDiscoverServices)peripheralDiscoverServices;
-- (void)setPeripheralDiscoverCharacteristicsBlock:(PeripheralDiscoverCharacteristics)peripheralDiscoverCharacteristics;
-- (void)setPeripheralUpdateCharacteristcBlock:(PeripheralUpdateCharacteristc)peripheralUpdateCharacteristc;
-- (void)setPeripheralWriteCharacteristcBlock:(PeripheralWriteCharacteristc)peripheralWriteCharacteristc;
+- (void)addPeripheralDiscoverServicesBlock:(PeripheralDiscoverServices)peripheralDiscoverServices;
+- (void)addPeripheralDiscoverCharacteristicsBlock:(PeripheralDiscoverCharacteristics)peripheralDiscoverCharacteristics;
+- (void)addPeripheralUpdateCharacteristcBlock:(PeripheralUpdateCharacteristc)peripheralUpdateCharacteristc;
+- (void)addPeripheralWriteCharacteristcBlock:(PeripheralWriteCharacteristc)peripheralWriteCharacteristc;
+
+- (void)removeAllBlocks;
+
+- (void)removeDiscoverPeripheralBlock:(DiscoverPeripheral)discoverPeripheral;
+- (void)removePeripheralConnectedBlock:(PeripheralConnected)peripheralConnected;
+- (void)removePeripheralFailedToConnectBlock:(PeripheralFailedToConnect)peripheralFailedToConnect;
+- (void)removePeripheralDisconnectedBlock:(PeripheralDisconnected)peripheralDisconnected;
+
+- (void)removeRetreievePeripheralsBlock:(RetreievePeripherals)retreievePeripherals;
+- (void)removeRetreieveConnectedPeripheralsBlock:(RetreieveConnectedPeripherals)retreieveConnectedPeripherals;
+
+- (void)removePeripheralDiscoverServicesBlock:(PeripheralDiscoverServices)peripheralDiscoverServices;
+- (void)removePeripheralDiscoverCharacteristicsBlock:(PeripheralDiscoverCharacteristics)peripheralDiscoverCharacteristics;
+- (void)removePeripheralUpdateCharacteristcBlock:(PeripheralUpdateCharacteristc)peripheralUpdateCharacteristc;
+- (void)removePeripheralWriteCharacteristcBlock:(PeripheralWriteCharacteristc)peripheralWriteCharacteristc;
 
 @end
