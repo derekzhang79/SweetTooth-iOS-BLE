@@ -29,7 +29,7 @@
 
     // Initialize SweetToothManager
     dispatch_queue_t queue = dispatch_queue_create("com.joshholtz.sweettooth", 0);
-    [SweetToothManager initSharedClient:queue options:nil];
+    [SweetToothManager initSharedManager:queue options:nil];
     
     [self test];
     
@@ -46,7 +46,7 @@
 - (void)test {
     
     // Set discover peripheral block
-    [[SweetToothManager sharedClient] setDiscoverPeripheralBlock:^void(CBPeripheral *peripheral, NSDictionary *advertisementData, NSNumber *RSSI) {
+    [[SweetToothManager sharedManager] setDiscoverPeripheralBlock:^void(CBPeripheral *peripheral, NSDictionary *advertisementData, NSNumber *RSSI) {
         NSLog(@"Discovered - %@", peripheral.name);
         
         /*
@@ -57,28 +57,28 @@
          */
         if (_somePeripheral == nil) {
             _somePeripheral = peripheral;
-            [[SweetToothManager sharedClient] connectPeripheral:peripheral options:@{}];
+            [[SweetToothManager sharedManager] connectPeripheral:peripheral options:@{}];
         }
     }];
     
     // Set peripheral connected block
-    [[SweetToothManager sharedClient] setPeripheralConnectedBlock:^(CBPeripheral *peripheral) {
+    [[SweetToothManager sharedManager] setPeripheralConnectedBlock:^(CBPeripheral *peripheral) {
         NSLog(@"Connected - %@", peripheral.name);
         [peripheral discoverServices:nil];
     }];
     
     // Set peripheral failed to connect block
-    [[SweetToothManager sharedClient] setPeripheralFailedToConnectBlock:^(CBPeripheral *peripheral, NSError *error) {
+    [[SweetToothManager sharedManager] setPeripheralFailedToConnectBlock:^(CBPeripheral *peripheral, NSError *error) {
         NSLog(@"Perpherial failed to connect");
     }];
     
     // Set peripheral failed to disconnect block
-    [[SweetToothManager sharedClient] setPeripheralDisconnectedBlock:^(CBPeripheral *peripheral, NSError *error) {
+    [[SweetToothManager sharedManager] setPeripheralDisconnectedBlock:^(CBPeripheral *peripheral, NSError *error) {
         NSLog(@"Disconnect peripheral");
     }];
     
     // Set peripheral discover services block
-    [[SweetToothManager sharedClient] setPeripheralDiscoverServicesBlock:^(CBPeripheral *peripheral, NSError *error) {
+    [[SweetToothManager sharedManager] setPeripheralDiscoverServicesBlock:^(CBPeripheral *peripheral, NSError *error) {
         NSLog(@"Services discovered - %@", [peripheral.services valueForKey:@"UUID"]);
         for (CBService *service in peripheral.services) {
             [peripheral discoverCharacteristics:nil forService:service];
@@ -86,7 +86,7 @@
     }];
     
     // Set peripheral discover characteristics block
-    [[SweetToothManager sharedClient] setPeripheralDiscoverCharacteristicsBlock:^(CBPeripheral *peripheral, CBService *service, NSError *error) {
+    [[SweetToothManager sharedManager] setPeripheralDiscoverCharacteristicsBlock:^(CBPeripheral *peripheral, CBService *service, NSError *error) {
         NSLog(@"Characteristics - %@", service.characteristics);
         for (CBCharacteristic *characteristic in service.characteristics) {
             [peripheral readValueForCharacteristic:characteristic];
@@ -94,7 +94,7 @@
     }];
     
     // Set peripheral update characterics block
-    [[SweetToothManager sharedClient] setPeripheralUpdateCharacteristcBlock:^(CBPeripheral *peripheral, CBCharacteristic *characteristic, NSError *error) {
+    [[SweetToothManager sharedManager] setPeripheralUpdateCharacteristcBlock:^(CBPeripheral *peripheral, CBCharacteristic *characteristic, NSError *error) {
         NSLog(@"Updated %@ to %@", characteristic.UUID, characteristic.value);
     }];
 }
@@ -105,11 +105,11 @@
     NSArray *serviceUUIDs = nil;
     
     // Starts SweetToothManager if switch is on and SweetToothManager isn't scanning already
-    if ([sender isOn] && ![SweetToothManager sharedClient].isScanning ) {
-        [[SweetToothManager sharedClient] start:serviceUUIDs options:@{CBCentralManagerScanOptionAllowDuplicatesKey:@YES }];
+    if ([sender isOn] && ![SweetToothManager sharedManager].isScanning ) {
+        [[SweetToothManager sharedManager] start:serviceUUIDs options:@{CBCentralManagerScanOptionAllowDuplicatesKey:@YES }];
     } else {
-        [[SweetToothManager sharedClient] cancelPeripheralConnection:_somePeripheral];
-        [[SweetToothManager sharedClient] stop];
+        [[SweetToothManager sharedManager] cancelPeripheralConnection:_somePeripheral];
+        [[SweetToothManager sharedManager] stop];
         _somePeripheral = nil;
     }
 }

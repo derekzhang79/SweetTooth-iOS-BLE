@@ -35,7 +35,7 @@
 
 static SweetToothManager *sharedInstance = nil;
 
-+ (SweetToothManager *)initSharedClient:(dispatch_queue_t)queue options:(NSDictionary*)options {
++ (SweetToothManager *)initSharedManager:(dispatch_queue_t)queue options:(NSDictionary*)options {
     
     if (sharedInstance == nil) {
         sharedInstance = [[super allocWithZone:NULL] init:queue options:options];
@@ -44,7 +44,7 @@ static SweetToothManager *sharedInstance = nil;
     return sharedInstance;
 }
 
-+ (SweetToothManager *)sharedClient {
++ (SweetToothManager *)sharedManager {
     
     if (sharedInstance == nil) {
         sharedInstance = [[super allocWithZone:NULL] init:nil options:nil];

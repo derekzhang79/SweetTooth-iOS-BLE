@@ -27,8 +27,8 @@ typedef void (^RetreieveConnectedPeripherals)(NSArray* peripherals);
 
 @property (nonatomic, assign) BOOL isScanning;
 
-+ (SweetToothManager *)initSharedClient:(dispatch_queue_t)queue options:(NSDictionary*)options;
-+ (SweetToothManager *)sharedClient;
++ (SweetToothManager *)initSharedManager:(dispatch_queue_t)queue options:(NSDictionary*)options;
++ (SweetToothManager *)sharedManager;
 
 - (void)start;
 - (void)start:(NSArray*)servicesUUIDs options:(NSDictionary*)options;
